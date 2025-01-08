@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Vocabulary Practice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background-color: #f4f4f9;
+    }
+    h1 {
+      font-size: 2.5rem;
+    }
+    .word-box {
+      font-size: 2rem;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      width: 50%;
+    }
+    input {
+      font-size: 1.5rem;
+      margin: 10px;
+      padding: 10px;
+      width: 80%;
+    }
+    button {
+      font-size: 1.5rem;
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .results {
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>English Vocabulary Practice</h1>
+  <div class="word-box">
+    <p id="split-word">PRE-PARE</p>
+  </div>
+  <input type="text" id="english-input" placeholder="Type the English word here...">
+  <br>
+  <input type="text" id="thai-input" placeholder="Type the Thai meaning here...">
+  <br>
+  <button onclick="submitAnswer()">Submit Answer</button>
+
+  <div class="results" id="results"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
