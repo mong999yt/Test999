@@ -26,7 +26,6 @@ let selectedWords = [];
 let currentWordIndex = 0;
 let userAnswers = [];
 let isPlaying = false;
-let utteranceNormal, utteranceSlow;
 
 // Initialize word selection checkboxes
 function initWordSelection() {
@@ -79,33 +78,27 @@ function loadWord() {
   playWord(word.full);
 }
 
-// Play the current word in a loop with alternating speeds and 3-second pauses
+// Play the current word in a loop with normal and slow speeds, with pauses in between
 function playWord(word) {
   isPlaying = true;
 
   function speakNormalThenSlow() {
     if (!isPlaying) return;
 
-    utteranceNormal = new SpeechSynthesisUtterance(word);
+    const utteranceNormal = new SpeechSynthesisUtterance(word);
     utteranceNormal.rate = 1; // Normal speed
-
     utteranceNormal.onend = () => {
       if (!isPlaying) return;
-
       setTimeout(() => {
-        utteranceSlow = new SpeechSynthesisUtterance(word);
+        const utteranceSlow = new SpeechSynthesisUtterance(word);
         utteranceSlow.rate = 0.5; // Slow speed
-
         utteranceSlow.onend = () => {
-          if (!isPlaying) return;
-
-          setTimeout(() => {
-            speakNormalThenSlow(); // Loop
-          }, 3000); // Pause for 3 seconds
+          if (isPlaying) {
+            setTimeout(speakNormalThenSlow, 2000); // Wait 2 seconds and loop
+          }
         };
-
         speechSynthesis.speak(utteranceSlow);
-      }, 3000); // Pause for 3 seconds
+      }, 2000); // Wait 2 seconds before slow speed
     };
 
     speechSynthesis.speak(utteranceNormal);
@@ -120,7 +113,7 @@ function stopWord() {
   speechSynthesis.cancel();
 }
 
-// Submit answer, save results and move to the next word automatically
+// Submit answer and save results
 function submitAnswer() {
   const englishInput = document.getElementById("english-input").value.trim().toLowerCase();
   const thaiInput = document.getElementById("thai-input").value.trim();
@@ -129,21 +122,18 @@ function submitAnswer() {
   const isEnglishCorrect = englishInput === currentWord.full.toLowerCase(); // เปรียบเทียบเป็นตัวพิมพ์เล็ก
   const isThaiCorrect = thaiInput === currentWord.thai; // ภาษาไทยไม่ต้องแปลง
 
-  // Add incorrect answers to results
   userAnswers.push({
     word: currentWord.full,
     englishCorrect: isEnglishCorrect,
-    englishInput: englishInput, // Save user input
     thaiCorrect: isThaiCorrect,
-    thaiInput: thaiInput, // Save user input
   });
 
-  // Clear the input fields
-  document.getElementById("english-input").value = "";
-  document.getElementById("thai-input").value = "";
+  alert("Answer saved! Press 'Next' to continue.");
+}
 
-  // Move to the next word
-  stopWord(); // Stop the current word from playing
+// Move to the next word
+function nextWord() {
+  stopWord();
   currentWordIndex++;
   if (currentWordIndex < selectedWords.length) {
     loadWord();
@@ -157,8 +147,8 @@ function showResults() {
   let html = "<h2>Results</h2>";
   userAnswers.forEach((answer, index) => {
     html += `<p><strong>${index + 1}. ${answer.word}</strong> - English: ${
-      answer.englishCorrect ? "✅ Correct" : `❌ Incorrect (You wrote: ${answer.englishInput})`
-    }, Thai: ${answer.thaiCorrect ? "✅ Correct" : `❌ Incorrect (You wrote: ${answer.thaiInput})`}</p>`;
+      answer.englishCorrect ? "✅ Correct" : "❌ Incorrect"
+    }, Thai: ${answer.thaiCorrect ? "✅ Correct" : "❌ Incorrect"}</p>`;
   });
   document.getElementById("results").innerHTML = html;
 
