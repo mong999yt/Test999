@@ -82,7 +82,7 @@ function startPractice() {
 
 // Load the current word
 function loadWord() {
-  stopWord();
+  stopWord(); // หยุดการพูดปัจจุบัน
   const word = selectedWords[currentWordIndex];
   document.getElementById("split-word").innerText = showEnglish ? word.split.toLowerCase() : '';
   document.getElementById("thai-meaning").innerText = showThai ? word.thai : '';
@@ -126,7 +126,7 @@ function stopWord() {
 
 // Submit answer and save results
 function submitAnswer() {
-  stopWord();
+  stopWord(); // หยุดการพูดปัจจุบัน
 
   const englishInput = document.getElementById("english-input").value.trim().toLowerCase();
   const thaiInput = document.getElementById("thai-input").value.trim();
@@ -141,11 +141,9 @@ function submitAnswer() {
     thaiCorrect: isThaiCorrect,
   });
 
-  document.getElementById("english-input").value = '';
-  document.getElementById("thai-input").value = '';
-
   currentWordIndex++;
   if (currentWordIndex < selectedWords.length) {
+    speechSynthesis.cancel(); // หยุดการพูดก่อนที่จะโหลดคำศัพท์ใหม่
     loadWord();
   } else {
     showResults();
