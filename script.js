@@ -82,7 +82,7 @@ function startPractice() {
 
 // Load the current word
 function loadWord() {
-  stopWord(); // หยุดการพูดปัจจุบัน
+  speechSynthesis.cancel(); // หยุดการพูดปัจจุบัน
   const word = selectedWords[currentWordIndex];
   document.getElementById("split-word").innerText = showEnglish ? word.split.toLowerCase() : '';
   document.getElementById("thai-meaning").innerText = showThai ? word.thai : '';
