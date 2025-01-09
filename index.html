@@ -48,27 +48,41 @@
     button:hover {
       background-color: #45a049;
     }
-    .results {
-      margin-top: 20px;
-      font-size: 1.2rem;
-    }
     .hide {
       display: none;
+    }
+    .checkbox-list {
+      text-align: left;
+      margin: 20px auto;
+      padding: 10px;
+      background-color: #fff;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      width: 50%;
     }
   </style>
 </head>
 <body>
   <h1>English Vocabulary Practice</h1>
-  <button onclick="toggleVisibility()">Hide Words</button>
-  <div class="word-box">
+
+  <!-- Section to select words -->
+  <div class="checkbox-list">
+    <h3>Select Words</h3>
+    <div id="word-selection"></div>
+    <button onclick="startPractice()">Start Practice</button>
+  </div>
+
+  <!-- Section to display words and controls -->
+  <div class="word-box hide" id="practice-section">
     <p id="split-word">pre-pare</p>
     <p class="thai-meaning" id="thai-meaning">จัดเตรียม</p>
+    <input type="text" id="english-input" placeholder="Type the English word here...">
+    <br>
+    <input type="text" id="thai-input" placeholder="Type the Thai meaning here...">
+    <br>
+    <button onclick="submitAnswer()">Submit Answer</button>
+    <button onclick="nextWord()">Next</button>
   </div>
-  <input type="text" id="english-input" placeholder="Type the English word here...">
-  <br>
-  <input type="text" id="thai-input" placeholder="Type the Thai meaning here...">
-  <br>
-  <button onclick="submitAnswer()">Submit Answer</button>
 
   <div class="results" id="results"></div>
 

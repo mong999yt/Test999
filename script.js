@@ -22,34 +22,98 @@ const words = [
   { full: "neighborhood", split: "neigh-bor-hood", thai: "ละแวกบ้าน" },
 ];
 
+let selectedWords = [];
 let currentWordIndex = 0;
 let userAnswers = [];
-let isHidden = false; // State for visibility of split word and Thai meaning
+let isPlaying = false;
 
-// Initialize the first word
-function loadWord() {
-  const word = words[currentWordIndex];
-  document.getElementById("split-word").innerText = word.split.toLowerCase(); // Ensure split word is lowercase
-  document.getElementById("thai-meaning").innerText = word.thai; // Show Thai meaning
-  speakWord(word.full, false); // Speak in normal speed
-  setTimeout(() => speakWord(word.full, true), 5000); // Speak in slow speed after 5 seconds
+// Initialize word selection checkboxes
+function initWordSelection() {
+  const wordSelection = document.getElementById("word-selection");
+  words.forEach((word, index) => {
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = `word-${index}`;
+    checkbox.value = index;
+
+    const label = document.createElement("label");
+    label.htmlFor = `word-${index}`;
+    label.innerText = word.full;
+
+    const div = document.createElement("div");
+    div.appendChild(checkbox);
+    div.appendChild(label);
+
+    wordSelection.appendChild(div);
+  });
 }
 
-// Speak the word
-function speakWord(text, slow) {
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = slow ? 0.5 : 1;
+// Start practice with selected words
+function startPractice() {
+  selectedWords = [];
+  const checkboxes = document.querySelectorAll("#word-selection input[type=checkbox]");
+  checkboxes.forEach((checkbox) => {
+    if (checkbox.checked) {
+      selectedWords.push(words[checkbox.value]);
+    }
+  });
+
+  if (selectedWords.length === 0) {
+    alert("Please select at least one word to practice!");
+    return;
+  }
+
+  currentWordIndex = 0;
+  userAnswers = [];
+  document.getElementById("practice-section").classList.remove("hide");
+  document.querySelector(".checkbox-list").classList.add("hide");
+  loadWord();
+}
+
+// Load the current word
+function loadWord() {
+  const word = selectedWords[currentWordIndex];
+  document.getElementById("split-word").innerText = word.split.toLowerCase();
+  document.getElementById("thai-meaning").innerText = word.thai;
+  playWord(word.full);
+}
+
+// Play the current word in a loop
+function playWord(word) {
+  isPlaying = true;
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.rate = 1;
+  utterance.onend = () => {
+    if (isPlaying) playWord(word);
+  };
   speechSynthesis.speak(utterance);
 }
 
-// Submit answer and load the next word
+// Stop the current word from playing
+function stopWord() {
+  isPlaying = false;
+  speechSynthesis.cancel();
+}
+
+// Move to the next word
+function nextWord() {
+  stopWord();
+  currentWordIndex++;
+  if (currentWordIndex < selectedWords.length) {
+    loadWord();
+  } else {
+    showResults();
+  }
+}
+
+// Submit answer and save results
 function submitAnswer() {
   const englishInput = document.getElementById("english-input").value.trim().toLowerCase();
   const thaiInput = document.getElementById("thai-input").value.trim();
 
-  const currentWord = words[currentWordIndex];
-  const isEnglishCorrect = englishInput === currentWord.full.toLowerCase();
-  const isThaiCorrect = thaiInput === currentWord.thai;
+  const currentWord = selectedWords[currentWordIndex];
+  const isEnglishCorrect = englishInput === currentWord.full.toLowerCase(); // เปรียบเทียบเป็นตัวพิมพ์เล็ก
+  const isThaiCorrect = thaiInput === currentWord.thai; // ภาษาไทยไม่ต้องแปลง
 
   userAnswers.push({
     word: currentWord.full,
@@ -57,15 +121,7 @@ function submitAnswer() {
     thaiCorrect: isThaiCorrect,
   });
 
-  currentWordIndex++;
-
-  if (currentWordIndex < words.length) {
-    document.getElementById("english-input").value = "";
-    document.getElementById("thai-input").value = "";
-    loadWord();
-  } else {
-    showResults();
-  }
+  alert("Answer saved! Press 'Next' to continue.");
 }
 
 // Show results after all words
@@ -77,25 +133,10 @@ function showResults() {
     }, Thai: ${answer.thaiCorrect ? "✅ Correct" : "❌ Incorrect"}</p>`;
   });
   document.getElementById("results").innerHTML = html;
+
+  document.getElementById("practice-section").classList.add("hide");
+  document.querySelector(".checkbox-list").classList.remove("hide");
 }
 
-// Toggle visibility of split word and Thai meaning
-function toggleVisibility() {
-  const splitWordElement = document.getElementById("split-word");
-  const thaiMeaningElement = document.getElementById("thai-meaning");
-
-  if (isHidden) {
-    splitWordElement.classList.remove("hide");
-    thaiMeaningElement.classList.remove("hide");
-    document.querySelector("button").innerText = "Hide Words";
-  } else {
-    splitWordElement.classList.add("hide");
-    thaiMeaningElement.classList.add("hide");
-    document.querySelector("button").innerText = "Show Words";
-  }
-
-  isHidden = !isHidden;
-}
-
-// Load the first word when the page loads
-loadWord();
+// Initialize the app
+initWordSelection();
