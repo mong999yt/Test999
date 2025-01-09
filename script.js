@@ -163,17 +163,13 @@ function showResults() {
   document.querySelector(".checkbox-list").classList.remove("hide");
 }
 
-// Toggle English word display
-function toggleEnglish() {
+// Toggle visibility of all words
+function toggleWords() {
   showEnglish = !showEnglish;
+  showThai = !showThai;
+
   const word = selectedWords[currentWordIndex];
   document.getElementById("split-word").innerText = showEnglish ? word.split.toLowerCase() : '';
-}
-
-// Toggle Thai meaning display
-function toggleThai() {
-  showThai = !showThai;
-  const word = selectedWords[currentWordIndex];
   document.getElementById("thai-meaning").innerText = showThai ? word.thai : '';
 }
 
