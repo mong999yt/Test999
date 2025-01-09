@@ -148,8 +148,8 @@ function showResults() {
   let html = "<h2>Results</h2>";
   userAnswers.forEach((answer, index) => {
     html += `<p><strong>${index + 1}. ${answer.word}</strong> - English: ${
-      answer.englishCorrect ? "✅ ถูก" : "❌ ผิด!!"
-    }, Thai: ${answer.thaiCorrect ? "✅ ถูก" : "❌ ผิด!!"}</p>`;
+      answer.englishCorrect ? "✅ " : "❌ "
+    }, Thai: ${answer.thaiCorrect ? "✅ " : "❌ "}</p>`;
   });
   document.getElementById("results").innerHTML = html;
 
