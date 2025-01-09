@@ -78,7 +78,7 @@ function loadWord() {
   playWord(word.full);
 }
 
-// Play the current word in a loop with alternating speeds
+// Play the current word in a loop with alternating speeds and 3-second pauses
 function playWord(word) {
   isPlaying = true;
 
@@ -87,28 +87,30 @@ function playWord(word) {
 
     const utteranceNormal = new SpeechSynthesisUtterance(word);
     utteranceNormal.rate = 1; // Normal speed
+
     utteranceNormal.onend = () => {
       if (!isPlaying) return;
 
-      const utteranceSlow = new SpeechSynthesisUtterance(word);
-      utteranceSlow.rate = 0.5; // Slow speed
-      utteranceSlow.onend = () => {
-        if (isPlaying) speakNormalThenSlow(); // Loop
-      };
+      setTimeout(() => {
+        const utteranceSlow = new SpeechSynthesisUtterance(word);
+        utteranceSlow.rate = 0.5; // Slow speed
 
-      speechSynthesis.speak(utteranceSlow);
+        utteranceSlow.onend = () => {
+          if (!isPlaying) return;
+
+          setTimeout(() => {
+            speakNormalThenSlow(); // Loop
+          }, 3000); // Pause for 3 seconds
+        };
+
+        speechSynthesis.speak(utteranceSlow);
+      }, 3000); // Pause for 3 seconds
     };
 
     speechSynthesis.speak(utteranceNormal);
   }
 
   speakNormalThenSlow();
-}
-
-// Modify stopWord to stop the loop
-function stopWord() {
-  isPlaying = false;
-  speechSynthesis.cancel();
 }
 
 // Stop the current word from playing
@@ -128,7 +130,7 @@ function nextWord() {
   }
 }
 
-// Submit answer and save results
+// Submit answer, save results and move to the next word automatically
 function submitAnswer() {
   const englishInput = document.getElementById("english-input").value.trim().toLowerCase();
   const thaiInput = document.getElementById("thai-input").value.trim();
@@ -143,7 +145,12 @@ function submitAnswer() {
     thaiCorrect: isThaiCorrect,
   });
 
-  alert("Answer saved! Press 'Next' to continue.");
+  // Clear the input fields
+  document.getElementById("english-input").value = "";
+  document.getElementById("thai-input").value = "";
+
+  // Move to the next word
+  nextWord();
 }
 
 // Show results after all words
@@ -158,6 +165,20 @@ function showResults() {
 
   document.getElementById("practice-section").classList.add("hide");
   document.querySelector(".checkbox-list").classList.remove("hide");
+}
+
+// Toggle words visibility
+function toggleWords() {
+  const splitWordElement = document.getElementById("split-word");
+  const thaiMeaningElement = document.getElementById("thai-meaning");
+  
+  if (splitWordElement.style.display === "none") {
+    splitWordElement.style.display = "block";
+    thaiMeaningElement.style.display = "block";
+  } else {
+    splitWordElement.style.display = "none";
+    thaiMeaningElement.style.display = "none";
+  }
 }
 
 // Initialize the app
