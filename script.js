@@ -72,6 +72,7 @@ function startPractice() {
 
 // Load the current word
 function loadWord() {
+  stopWord();
   const word = selectedWords[currentWordIndex];
   document.getElementById("split-word").innerText = word.split.toLowerCase();
   document.getElementById("thai-meaning").innerText = word.thai;
@@ -115,6 +116,8 @@ function stopWord() {
 
 // Submit answer and save results
 function submitAnswer() {
+  stopWord();
+
   const englishInput = document.getElementById("english-input").value.trim().toLowerCase();
   const thaiInput = document.getElementById("thai-input").value.trim();
 
