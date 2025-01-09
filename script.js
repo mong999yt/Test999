@@ -26,6 +26,8 @@ let selectedWords = [];
 let currentWordIndex = 0;
 let userAnswers = [];
 let isPlaying = false;
+let showEnglish = true;
+let showThai = true;
 
 // Initialize word selection checkboxes
 function initWordSelection() {
@@ -45,6 +47,14 @@ function initWordSelection() {
     div.appendChild(label);
 
     wordSelection.appendChild(div);
+  });
+}
+
+// Select all words
+function selectAllWords() {
+  const checkboxes = document.querySelectorAll("#word-selection input[type=checkbox]");
+  checkboxes.forEach((checkbox) => {
+    checkbox.checked = true;
   });
 }
 
@@ -74,8 +84,8 @@ function startPractice() {
 function loadWord() {
   stopWord();
   const word = selectedWords[currentWordIndex];
-  document.getElementById("split-word").innerText = word.split.toLowerCase();
-  document.getElementById("thai-meaning").innerText = word.thai;
+  document.getElementById("split-word").innerText = showEnglish ? word.split.toLowerCase() : '';
+  document.getElementById("thai-meaning").innerText = showThai ? word.thai : '';
   playWord(word.full);
 }
 
@@ -131,12 +141,6 @@ function submitAnswer() {
     thaiCorrect: isThaiCorrect,
   });
 
-  alert("Answer saved! Press 'Next' to continue.");
-}
-
-// Move to the next word
-function nextWord() {
-  stopWord();
   currentWordIndex++;
   if (currentWordIndex < selectedWords.length) {
     loadWord();
@@ -157,6 +161,20 @@ function showResults() {
 
   document.getElementById("practice-section").classList.add("hide");
   document.querySelector(".checkbox-list").classList.remove("hide");
+}
+
+// Toggle English word display
+function toggleEnglish() {
+  showEnglish = !showEnglish;
+  const word = selectedWords[currentWordIndex];
+  document.getElementById("split-word").innerText = showEnglish ? word.split.toLowerCase() : '';
+}
+
+// Toggle Thai meaning display
+function toggleThai() {
+  showThai = !showThai;
+  const word = selectedWords[currentWordIndex];
+  document.getElementById("thai-meaning").innerText = showThai ? word.thai : '';
 }
 
 // Initialize the app
