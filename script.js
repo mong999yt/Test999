@@ -148,8 +148,8 @@ function showResults() {
   let html = "<h2>Results</h2>";
   userAnswers.forEach((answer, index) => {
     html += `<p><strong>${index + 1}. ${answer.word}</strong> - English: ${
-      answer.englishCorrect ? "✅ Correct" : "❌ Incorrect"
-    }, Thai: ${answer.thaiCorrect ? "✅ Correct" : "❌ Incorrect"}</p>`;
+      answer.englishCorrect ? "✅ ถูก" : "❌ ผิด!!"
+    }, Thai: ${answer.thaiCorrect ? "✅ ถูก" : "❌ ผิด!!"}</p>`;
   });
   document.getElementById("results").innerHTML = html;
 
@@ -165,6 +165,9 @@ function toggleWords() {
   const word = selectedWords[currentWordIndex];
   document.getElementById("split-word").innerText = showEnglish ? word.split.toLowerCase() : '';
   document.getElementById("thai-meaning").innerText = showThai ? word.thai : '';
+
+  // Play the word automatically when toggling words
+  playWord();
 }
 
 // Initialize the app
