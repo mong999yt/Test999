@@ -135,6 +135,10 @@ function submitAnswer() {
     thaiCorrect: isThaiCorrect,
   });
 
+  // เคลียร์ข้อความใน input fields
+  document.getElementById("english-input").value = '';
+  document.getElementById("thai-input").value = '';
+
   currentWordIndex++;
   if (currentWordIndex < selectedWords.length) {
     loadWord();
