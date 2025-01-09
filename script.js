@@ -29,6 +29,7 @@ let userAnswers = [];
 function loadWord() {
   const word = words[currentWordIndex];
   document.getElementById("split-word").innerText = word.split;
+  document.getElementById("thai-meaning").innerText = word.thai; // Show Thai meaning
   speakWord(word.full, false); // Speak in normal speed
   setTimeout(() => speakWord(word.full, true), 5000); // Speak in slow speed after 5 seconds
 }
