@@ -26,6 +26,7 @@ let selectedWords = [];
 let currentWordIndex = 0;
 let userAnswers = [];
 let isPlaying = false;
+let utteranceNormal, utteranceSlow;
 
 // Initialize word selection checkboxes
 function initWordSelection() {
@@ -85,14 +86,14 @@ function playWord(word) {
   function speakNormalThenSlow() {
     if (!isPlaying) return;
 
-    const utteranceNormal = new SpeechSynthesisUtterance(word);
+    utteranceNormal = new SpeechSynthesisUtterance(word);
     utteranceNormal.rate = 1; // Normal speed
 
     utteranceNormal.onend = () => {
       if (!isPlaying) return;
 
       setTimeout(() => {
-        const utteranceSlow = new SpeechSynthesisUtterance(word);
+        utteranceSlow = new SpeechSynthesisUtterance(word);
         utteranceSlow.rate = 0.5; // Slow speed
 
         utteranceSlow.onend = () => {
@@ -119,17 +120,6 @@ function stopWord() {
   speechSynthesis.cancel();
 }
 
-// Move to the next word
-function nextWord() {
-  stopWord();
-  currentWordIndex++;
-  if (currentWordIndex < selectedWords.length) {
-    loadWord();
-  } else {
-    showResults();
-  }
-}
-
 // Submit answer, save results and move to the next word automatically
 function submitAnswer() {
   const englishInput = document.getElementById("english-input").value.trim().toLowerCase();
@@ -153,7 +143,13 @@ function submitAnswer() {
   document.getElementById("thai-input").value = "";
 
   // Move to the next word
-  nextWord();
+  stopWord(); // Stop the current word from playing
+  currentWordIndex++;
+  if (currentWordIndex < selectedWords.length) {
+    loadWord();
+  } else {
+    showResults();
+  }
 }
 
 // Show results after all words
@@ -168,20 +164,6 @@ function showResults() {
 
   document.getElementById("practice-section").classList.add("hide");
   document.querySelector(".checkbox-list").classList.remove("hide");
-}
-
-// Toggle words visibility
-function toggleWords() {
-  const splitWordElement = document.getElementById("split-word");
-  const thaiMeaningElement = document.getElementById("thai-meaning");
-  
-  if (splitWordElement.style.display === "none") {
-    splitWordElement.style.display = "block";
-    thaiMeaningElement.style.display = "block";
-  } else {
-    splitWordElement.style.display = "none";
-    thaiMeaningElement.style.display = "none";
-  }
 }
 
 // Initialize the app
