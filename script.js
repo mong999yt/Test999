@@ -78,15 +78,37 @@ function loadWord() {
   playWord(word.full);
 }
 
-// Play the current word in a loop
+// Play the current word in a loop with alternating speeds
 function playWord(word) {
   isPlaying = true;
-  const utterance = new SpeechSynthesisUtterance(word);
-  utterance.rate = 1;
-  utterance.onend = () => {
-    if (isPlaying) playWord(word);
-  };
-  speechSynthesis.speak(utterance);
+
+  function speakNormalThenSlow() {
+    if (!isPlaying) return;
+
+    const utteranceNormal = new SpeechSynthesisUtterance(word);
+    utteranceNormal.rate = 1; // Normal speed
+    utteranceNormal.onend = () => {
+      if (!isPlaying) return;
+
+      const utteranceSlow = new SpeechSynthesisUtterance(word);
+      utteranceSlow.rate = 0.5; // Slow speed
+      utteranceSlow.onend = () => {
+        if (isPlaying) speakNormalThenSlow(); // Loop
+      };
+
+      speechSynthesis.speak(utteranceSlow);
+    };
+
+    speechSynthesis.speak(utteranceNormal);
+  }
+
+  speakNormalThenSlow();
+}
+
+// Modify stopWord to stop the loop
+function stopWord() {
+  isPlaying = false;
+  speechSynthesis.cancel();
 }
 
 // Stop the current word from playing
