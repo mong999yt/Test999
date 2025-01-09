@@ -77,6 +77,7 @@ function startPractice() {
   document.getElementById("practice-section").classList.remove("hide");
   document.querySelector(".checkbox-list").classList.add("hide");
   loadWord();
+  playWord(); // Play the word when practice starts
 }
 
 // Load the current word
@@ -128,6 +129,7 @@ function submitAnswer() {
   currentWordIndex++;
   if (currentWordIndex < selectedWords.length) {
     loadWord();
+    playWord(); // Play the word when moving to the next word
   } else {
     showResults();
   }
