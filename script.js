@@ -28,6 +28,15 @@ let userAnswers = [];
 let showEnglish = true;
 let showThai = true;
 
+// Shuffle the selected words
+function shuffleWords(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 // Initialize word selection checkboxes
 function initWordSelection() {
   const wordSelection = document.getElementById("word-selection");
@@ -71,6 +80,8 @@ function startPractice() {
     alert("Please select at least one word to practice!");
     return;
   }
+
+  selectedWords = shuffleWords(selectedWords); // สุ่มลำดับคำศัพท์ที่เลือก
 
   currentWordIndex = 0;
   userAnswers = [];
