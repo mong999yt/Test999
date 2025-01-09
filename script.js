@@ -28,6 +28,14 @@ let userAnswers = [];
 let showEnglish = true;
 let showThai = true;
 
+// Shuffle array function
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
 // Initialize word selection checkboxes
 function initWordSelection() {
   const wordSelection = document.getElementById("word-selection");
@@ -72,6 +80,9 @@ function startPractice() {
     return;
   }
 
+  // Shuffle selected words
+  shuffleArray(selectedWords);
+
   currentWordIndex = 0;
   userAnswers = [];
   document.getElementById("practice-section").classList.remove("hide");
@@ -84,6 +95,9 @@ function loadWord() {
   const word = selectedWords[currentWordIndex];
   document.getElementById("split-word").innerText = showEnglish ? word.split.toLowerCase() : '';
   document.getElementById("thai-meaning").innerText = showThai ? word.thai : '';
+
+  // Play the word automatically when loaded
+  playWord();
 }
 
 // Play the current word in normal and slow speeds, with pauses in between
@@ -120,10 +134,6 @@ function submitAnswer() {
     englishCorrect: isEnglishCorrect,
     thaiCorrect: isThaiCorrect,
   });
-
-  // Clear the input fields
-  document.getElementById("english-input").value = "";
-  document.getElementById("thai-input").value = "";
 
   currentWordIndex++;
   if (currentWordIndex < selectedWords.length) {
