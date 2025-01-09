@@ -141,6 +141,9 @@ function submitAnswer() {
     thaiCorrect: isThaiCorrect,
   });
 
+  document.getElementById("english-input").value = '';
+  document.getElementById("thai-input").value = '';
+
   currentWordIndex++;
   if (currentWordIndex < selectedWords.length) {
     loadWord();
