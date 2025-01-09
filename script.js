@@ -25,7 +25,6 @@ const words = [
 let selectedWords = [];
 let currentWordIndex = 0;
 let userAnswers = [];
-let isPlaying = false;
 let showEnglish = true;
 let showThai = true;
 
@@ -82,53 +81,33 @@ function startPractice() {
 
 // Load the current word
 function loadWord() {
-  stopWord(); // หยุดการพูดปัจจุบัน
   const word = selectedWords[currentWordIndex];
   document.getElementById("split-word").innerText = showEnglish ? word.split.toLowerCase() : '';
   document.getElementById("thai-meaning").innerText = showThai ? word.thai : '';
-  playWord(word.full);
 }
 
-// Play the current word in a loop with normal and slow speeds, with pauses in between
-function playWord(word) {
-  speechSynthesis.cancel(); // หยุดการพูดก่อนเริ่มใหม่
-  isPlaying = true;
-
-  function speakNormalThenSlow() {
-    if (!isPlaying) return;
-
-    const utteranceNormal = new SpeechSynthesisUtterance(word);
-    utteranceNormal.rate = 1; // Normal speed
-    utteranceNormal.onend = () => {
-      if (!isPlaying) return;
-      setTimeout(() => {
-        const utteranceSlow = new SpeechSynthesisUtterance(word);
-        utteranceSlow.rate = 0.5; // Slow speed
-        utteranceSlow.onend = () => {
-          if (isPlaying) {
-            setTimeout(speakNormalThenSlow, 2000); // Wait 2 seconds and loop
-          }
-        };
-        speechSynthesis.speak(utteranceSlow);
-      }, 2000); // Wait 2 seconds before slow speed
-    };
-
-    speechSynthesis.speak(utteranceNormal);
-  }
-
-  speakNormalThenSlow();
-}
-
-// Stop the current word from playing
-function stopWord() {
-  isPlaying = false;
-  speechSynthesis.cancel();
+// Play the current word in normal and slow speeds, with pauses in between
+function playWord() {
+  const word = selectedWords[currentWordIndex].full;
+  const utteranceNormal = new SpeechSynthesisUtterance(word);
+  utteranceNormal.rate = 1; // Normal speed
+  utteranceNormal.onend = () => {
+    setTimeout(() => {
+      const utteranceSlow = new SpeechSynthesisUtterance(word);
+      utteranceSlow.rate = 0.5; // Slow speed
+      utteranceSlow.onend = () => {
+        setTimeout(() => {
+          speechSynthesis.cancel(); // Stop after slow speed
+        }, 2000); // Wait 2 seconds before stopping
+      };
+      speechSynthesis.speak(utteranceSlow);
+    }, 2000); // Wait 2 seconds before slow speed
+  };
+  speechSynthesis.speak(utteranceNormal);
 }
 
 // Submit answer and save results
 function submitAnswer() {
-  stopWord(); // หยุดการพูดปัจจุบัน
-
   const englishInput = document.getElementById("english-input").value.trim().toLowerCase();
   const thaiInput = document.getElementById("thai-input").value.trim();
 
