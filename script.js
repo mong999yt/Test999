@@ -139,10 +139,13 @@ function submitAnswer() {
   const isEnglishCorrect = englishInput === currentWord.full.toLowerCase(); // เปรียบเทียบเป็นตัวพิมพ์เล็ก
   const isThaiCorrect = thaiInput === currentWord.thai; // ภาษาไทยไม่ต้องแปลง
 
+  // Add incorrect answers to results
   userAnswers.push({
     word: currentWord.full,
     englishCorrect: isEnglishCorrect,
+    englishInput: englishInput, // Save user input
     thaiCorrect: isThaiCorrect,
+    thaiInput: thaiInput, // Save user input
   });
 
   // Clear the input fields
@@ -158,8 +161,8 @@ function showResults() {
   let html = "<h2>Results</h2>";
   userAnswers.forEach((answer, index) => {
     html += `<p><strong>${index + 1}. ${answer.word}</strong> - English: ${
-      answer.englishCorrect ? "✅ Correct" : "❌ Incorrect"
-    }, Thai: ${answer.thaiCorrect ? "✅ Correct" : "❌ Incorrect"}</p>`;
+      answer.englishCorrect ? "✅ Correct" : `❌ Incorrect (You wrote: ${answer.englishInput})`
+    }, Thai: ${answer.thaiCorrect ? "✅ Correct" : `❌ Incorrect (You wrote: ${answer.thaiInput})`}</p>`;
   });
   document.getElementById("results").innerHTML = html;
 
