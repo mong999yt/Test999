@@ -82,7 +82,7 @@ function startPractice() {
 
 // Load the current word
 function loadWord() {
-  speechSynthesis.cancel(); // หยุดการพูดปัจจุบัน
+  stopWord(); // หยุดการพูดปัจจุบัน
   const word = selectedWords[currentWordIndex];
   document.getElementById("split-word").innerText = showEnglish ? word.split.toLowerCase() : '';
   document.getElementById("thai-meaning").innerText = showThai ? word.thai : '';
@@ -91,6 +91,7 @@ function loadWord() {
 
 // Play the current word in a loop with normal and slow speeds, with pauses in between
 function playWord(word) {
+  speechSynthesis.cancel(); // หยุดการพูดก่อนเริ่มใหม่
   isPlaying = true;
 
   function speakNormalThenSlow() {
@@ -143,7 +144,6 @@ function submitAnswer() {
 
   currentWordIndex++;
   if (currentWordIndex < selectedWords.length) {
-    speechSynthesis.cancel(); // หยุดการพูดก่อนที่จะโหลดคำศัพท์ใหม่
     loadWord();
   } else {
     showResults();
