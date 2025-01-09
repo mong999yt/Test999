@@ -22,6 +22,7 @@
       border: 2px solid #ccc;
       border-radius: 10px;
       width: 50%;
+      display: block;
     }
     .thai-meaning {
       font-size: 1.2rem;
@@ -51,12 +52,16 @@
       margin-top: 20px;
       font-size: 1.2rem;
     }
+    .hide {
+      display: none;
+    }
   </style>
 </head>
 <body>
   <h1>English Vocabulary Practice</h1>
+  <button onclick="toggleVisibility()">Hide Words</button>
   <div class="word-box">
-    <p id="split-word">PRE-PARE</p>
+    <p id="split-word">pre-pare</p>
     <p class="thai-meaning" id="thai-meaning">จัดเตรียม</p>
   </div>
   <input type="text" id="english-input" placeholder="Type the English word here...">

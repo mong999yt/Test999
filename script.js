@@ -1,34 +1,35 @@
 // List of words with English full words, split words, and Thai meanings
 const words = [
-  { full: "prepare", split: "PRE-PARE", thai: "จัดเตรียม" },
-  { full: "available", split: "A-VAIL-A-BLE", thai: "หาได้" },
-  { full: "raw food", split: "RAW FOOD", thai: "อาหารดิบ" },
-  { full: "low-calorie food", split: "LOW-CAL-O-RIE FOOD", thai: "อาหารพลังงานต่ำ" },
-  { full: "recommend", split: "REC-O-MMEND", thai: "แนะนำ" },
-  { full: "vegan diet", split: "VE-GAN DI-ET", thai: "อาหารมังสวิรัติ" },
-  { full: "ingredient", split: "IN-GRE-DI-ENT", thai: "ส่วนผสม" },
-  { full: "dairy food", split: "DAI-RY FOOD", thai: "อาหารประเภทนมเนย" },
-  { full: "ancestor", split: "AN-CES-TOR", thai: "บรรพบุรุษ" },
-  { full: "increase", split: "IN-CREASE", thai: "เพิ่มขึ้น" },
-  { full: "extinct", split: "EX-TINCT", thai: "สูญสิ้น" },
-  { full: "language", split: "LAN-GUAGE", thai: "ภาษา" },
-  { full: "endangered", split: "EN-DAN-GERED", thai: "ใกล้สูญพันธุ์" },
-  { full: "crowded", split: "CROWD-ED", thai: "แออัด" },
-  { full: "native speaker", split: "NA-TIVE SPEAK-ER", thai: "เจ้าของภาษา" },
-  { full: "population", split: "POP-U-LA-TION", thai: "ประชากร" },
-  { full: "traffic", split: "TRAF-FIC", thai: "การจราจร" },
-  { full: "sidewalk", split: "SIDE-WALK", thai: "ทางเท้า" },
-  { full: "vehicle", split: "VE-HI-CLE", thai: "ยานพาหนะ" },
-  { full: "neighborhood", split: "NEIGH-BOR-HOOD", thai: "ละแวกบ้าน" },
+  { full: "prepare", split: "pre-pare", thai: "จัดเตรียม" },
+  { full: "available", split: "a-vail-a-ble", thai: "หาได้" },
+  { full: "raw food", split: "raw food", thai: "อาหารดิบ" },
+  { full: "low-calorie food", split: "low-cal-o-rie food", thai: "อาหารพลังงานต่ำ" },
+  { full: "recommend", split: "rec-o-mmend", thai: "แนะนำ" },
+  { full: "vegan diet", split: "ve-gan di-et", thai: "อาหารมังสวิรัติ" },
+  { full: "ingredient", split: "in-gre-di-ent", thai: "ส่วนผสม" },
+  { full: "dairy food", split: "dai-ry food", thai: "อาหารประเภทนมเนย" },
+  { full: "ancestor", split: "an-ces-tor", thai: "บรรพบุรุษ" },
+  { full: "increase", split: "in-crease", thai: "เพิ่มขึ้น" },
+  { full: "extinct", split: "ex-tinct", thai: "สูญสิ้น" },
+  { full: "language", split: "lan-guage", thai: "ภาษา" },
+  { full: "endangered", split: "en-dan-gered", thai: "ใกล้สูญพันธุ์" },
+  { full: "crowded", split: "crowd-ed", thai: "แออัด" },
+  { full: "native speaker", split: "na-tive speak-er", thai: "เจ้าของภาษา" },
+  { full: "population", split: "pop-u-la-tion", thai: "ประชากร" },
+  { full: "traffic", split: "traf-fic", thai: "การจราจร" },
+  { full: "sidewalk", split: "side-walk", thai: "ทางเท้า" },
+  { full: "vehicle", split: "ve-hi-cle", thai: "ยานพาหนะ" },
+  { full: "neighborhood", split: "neigh-bor-hood", thai: "ละแวกบ้าน" },
 ];
 
 let currentWordIndex = 0;
 let userAnswers = [];
+let isHidden = false; // State for visibility of split word and Thai meaning
 
 // Initialize the first word
 function loadWord() {
   const word = words[currentWordIndex];
-  document.getElementById("split-word").innerText = word.split;
+  document.getElementById("split-word").innerText = word.split.toLowerCase(); // Ensure split word is lowercase
   document.getElementById("thai-meaning").innerText = word.thai; // Show Thai meaning
   speakWord(word.full, false); // Speak in normal speed
   setTimeout(() => speakWord(word.full, true), 5000); // Speak in slow speed after 5 seconds
@@ -76,6 +77,24 @@ function showResults() {
     }, Thai: ${answer.thaiCorrect ? "✅ Correct" : "❌ Incorrect"}</p>`;
   });
   document.getElementById("results").innerHTML = html;
+}
+
+// Toggle visibility of split word and Thai meaning
+function toggleVisibility() {
+  const splitWordElement = document.getElementById("split-word");
+  const thaiMeaningElement = document.getElementById("thai-meaning");
+
+  if (isHidden) {
+    splitWordElement.classList.remove("hide");
+    thaiMeaningElement.classList.remove("hide");
+    document.querySelector("button").innerText = "Hide Words";
+  } else {
+    splitWordElement.classList.add("hide");
+    thaiMeaningElement.classList.add("hide");
+    document.querySelector("button").innerText = "Show Words";
+  }
+
+  isHidden = !isHidden;
 }
 
 // Load the first word when the page loads
