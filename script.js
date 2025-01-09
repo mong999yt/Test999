@@ -28,14 +28,6 @@ let userAnswers = [];
 let showEnglish = true;
 let showThai = true;
 
-// Shuffle array function
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
-
 // Initialize word selection checkboxes
 function initWordSelection() {
   const wordSelection = document.getElementById("word-selection");
@@ -80,9 +72,6 @@ function startPractice() {
     return;
   }
 
-  // Shuffle selected words
-  shuffleArray(selectedWords);
-
   currentWordIndex = 0;
   userAnswers = [];
   document.getElementById("practice-section").classList.remove("hide");
@@ -95,9 +84,6 @@ function loadWord() {
   const word = selectedWords[currentWordIndex];
   document.getElementById("split-word").innerText = showEnglish ? word.split.toLowerCase() : '';
   document.getElementById("thai-meaning").innerText = showThai ? word.thai : '';
-
-  // Play the word automatically when loaded
-  playWord();
 }
 
 // Play the current word in normal and slow speeds, with pauses in between
@@ -135,9 +121,9 @@ function submitAnswer() {
     thaiCorrect: isThaiCorrect,
   });
 
-  // เคลียร์ข้อความใน input fields
-  document.getElementById("english-input").value = '';
-  document.getElementById("thai-input").value = '';
+  // Clear the input fields
+  document.getElementById("english-input").value = "";
+  document.getElementById("thai-input").value = "";
 
   currentWordIndex++;
   if (currentWordIndex < selectedWords.length) {
@@ -152,8 +138,8 @@ function showResults() {
   let html = "<h2>Results</h2>";
   userAnswers.forEach((answer, index) => {
     html += `<p><strong>${index + 1}. ${answer.word}</strong> - English: ${
-      answer.englishCorrect ? "✅ " : "❌ "
-    }, Thai: ${answer.thaiCorrect ? "✅ " : "❌ "}</p>`;
+      answer.englishCorrect ? "✅ Correct" : "❌ Incorrect"
+    }, Thai: ${answer.thaiCorrect ? "✅ Correct" : "❌ Incorrect"}</p>`;
   });
   document.getElementById("results").innerHTML = html;
 
@@ -169,9 +155,6 @@ function toggleWords() {
   const word = selectedWords[currentWordIndex];
   document.getElementById("split-word").innerText = showEnglish ? word.split.toLowerCase() : '';
   document.getElementById("thai-meaning").innerText = showThai ? word.thai : '';
-
-  // Play the word automatically when toggling words
-  playWord();
 }
 
 // Initialize the app
